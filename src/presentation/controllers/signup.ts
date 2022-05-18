@@ -1,16 +1,29 @@
+import { HttpRequest, HttpResponse } from '../protocols/http'
+import { MissingParamError } from '../errors/missing-param-error'
+
 export class SignUpController {
-  handle (httpRequest: any): any {
+  handle (httpRequest: HttpRequest): HttpResponse {
     if (!httpRequest.body.name) {
       return {
         statusCode: 400,
-        body: new Error('Missing param: name')
+        body: new MissingParamError('name')
       }
-    }
-    if (!httpRequest.body.email) {
+    } else {
       return {
         statusCode: 400,
-        body: new Error('Missing param: email')
+        body: new MissingParamError('email')
       }
     }
+    // TypeScript isn't that smart
+    /* interface HttpResponse
+    * import HttpResponse
+    * Function lacks ending return statement and return type does not include 'undefined'
+    */
+    // else if (!httpRequest.body.email) {
+    //   return {
+    //     statusCode: 400,
+    //     body: new MissingParamError('email')
+    //   }
+    // }
   }
 }
