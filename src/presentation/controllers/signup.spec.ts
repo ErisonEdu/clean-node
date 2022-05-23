@@ -16,15 +16,6 @@ const makeEmailValidatorStub = (): EmailValidator => {
   return new EmailValidatorStub()
 }
 
-const makeEmailValidatorStubWithError = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid (email: string): boolean {
-      throw new Error()
-    }
-  }
-  return new EmailValidatorStub()
-}
-
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidatorStub()
   const sut = new SignUpController(emailValidatorStub)
@@ -158,38 +149,6 @@ test('Should call EmailValidator with correct email', () => {
   }
   sut.handle(httpRequest)
   expect(isValidSpy).toHaveBeenCalledWith('any_email@mail.com')
-})
-
-test('Should return 500 if EmailValidator throws', () => {
-  const emailValidatorStubWithError = makeEmailValidatorStubWithError()
-  const sut = new SignUpController(emailValidatorStubWithError)
-  const httpRequest = {
-    body: {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password'
-    }
-  }
-  const httpResponse = sut.handle(httpRequest)
-  expect(httpResponse.statusCode).toBe(500)
-  expect(httpResponse.body).toEqual(new ServerError())
-})
-
-test('Should return 500 if EmailValidator throws', () => {
-  const emailValidatorStubWithError = makeEmailValidatorStubWithError()
-  const sut = new SignUpController(emailValidatorStubWithError)
-  const httpRequest = {
-    body: {
-      name: 'any_name',
-      email: 'any_email@mail.com',
-      password: 'any_password',
-      passwordConfirmation: 'any_password'
-    }
-  }
-  const httpResponse = sut.handle(httpRequest)
-  expect(httpResponse.statusCode).toBe(500)
-  expect(httpResponse.body).toEqual(new ServerError())
 })
 
 test('Should return 500 if EmailValidator throws', () => {
