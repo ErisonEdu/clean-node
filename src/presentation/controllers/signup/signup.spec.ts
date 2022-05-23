@@ -187,6 +187,25 @@ test('Should return 500 if EmailValidator throws', () => {
   expect(httpResponse.body).toEqual(new ServerError())
 })
 
+test('Should return 500 if AddAccount throws', () => {
+  const { sut, addAccountStub } = makeSut()
+  jest.spyOn(addAccountStub, 'add')
+    .mockImplementation(() => {
+      throw new Error()
+    })
+  const httpRequest = {
+    body: {
+      name: 'any_name',
+      email: 'any_email@mail.com',
+      password: 'any_password',
+      passwordConfirmation: 'any_password'
+    }
+  }
+  const httpResponse = sut.handle(httpRequest)
+  expect(httpResponse.statusCode).toBe(500)
+  expect(httpResponse.body).toEqual(new ServerError())
+})
+
 test('Should call addAccount with correct value', () => {
   const { sut, addAccountStub } = makeSut()
   const addSpy = jest.spyOn(addAccountStub, 'add')
