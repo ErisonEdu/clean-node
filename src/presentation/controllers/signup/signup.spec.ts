@@ -136,23 +136,6 @@ describe('SignUp Controller', () => {
   })
 })
 
-describe('SignUp Controller', () => {
-  test('Should return 201 if everything is ok', () => {
-    const { sut } = makeSut()
-    const httpRequest = {
-      body: {
-        name: 'any_name',
-        email: 'invalid_email@mail.com',
-        password: 'any_password',
-        passwordConfirmation: 'any_password'
-      }
-    }
-    const httpResponse = sut.handle(httpRequest)
-    expect(httpResponse.statusCode).toBe(201)
-    expect(httpResponse.body).toEqual('created')
-  })
-})
-
 test('Should call EmailValidator with correct email', () => {
   const { sut, emailValidatorStub } = makeSut()
   const isValidSpy = jest.spyOn(emailValidatorStub, 'isValid')
@@ -222,5 +205,27 @@ test('Should call addAccount with correct value', () => {
     name: 'any_name',
     email: 'any_email@mail.com',
     password: 'any_password'
+  })
+})
+
+describe('SignUp Controller', () => {
+  test('Should return 400 if an invalid email is provided', () => {
+    const { sut } = makeSut()
+    const httpRequest = {
+      body: {
+        name: 'valid_name',
+        email: 'valid_email@mail.com',
+        password: 'valid_password',
+        passwordConfirmation: 'valid_password'
+      }
+    }
+    const httpResponse = sut.handle(httpRequest)
+    expect(httpResponse.statusCode).toBe(201)
+    expect(httpResponse.body).toEqual({
+      id: 'valid_id',
+      name: 'valid_name',
+      email: 'valid_email@mail.com',
+      password: 'valid_password'
+    })
   })
 })
