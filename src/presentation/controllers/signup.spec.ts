@@ -179,9 +179,10 @@ test('Should return 500 if EmailValidator throws', () => {
 
 test('Should return 500 if EmailValidator throws', () => {
   const { sut, emailValidatorStub } = makeSut()
-  jest.spyOn(emailValidatorStub, 'isValid').mockImplementation(() => {
-    throw new Error()
-  })
+  jest.spyOn(emailValidatorStub, 'isValid')
+    .mockImplementation(() => {
+      throw new Error()
+    })
   const httpRequest = {
     body: {
       name: 'any_name',
